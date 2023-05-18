@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 14:44:46 by dlu               #+#    #+#             */
-/*   Updated: 2023/05/17 21:10:28 by dlu              ###   ########.fr       */
+/*   Updated: 2023/05/18 15:20:41 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,18 @@
 
 void	signal_handler(int signal)
 {
-	printf("Signal: %d\n", signal);
+	static int bit;
+	static int c;
+	
+	if (signal == SIGUSR1)
+		c |= 1 << bit;
+	++bit;
+	if (bit == 8)
+	{
+		write(1, &c, 1);
+		bit = 0;
+		c = 0;
+	}
 }
 
 int	main(void)
