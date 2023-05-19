@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 14:44:46 by dlu               #+#    #+#             */
-/*   Updated: 2023/05/19 17:27:31 by dlu              ###   ########.fr       */
+/*   Updated: 2023/05/19 17:58:28 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,34 @@
 
 #define START_MSG "Server is now running. PID: %d\n"
 
+static int	g_client_pid = 0;
+
 void	signal_handler(int signum, siginfo_t *info, void *context)
 {
-	static int	clientPID = 0;
 	static int	bit = 0;
 	static int	c;
 
 	(void) context;
-	if (clientPID == 0)
-		clientPID = info->si_pid;
-	if (clientPID == info->si_pid)
+	if (g_client_pid == 0)
+		g_client_pid = info->si_pid;
+	if (g_client_pid == info->si_pid)
 	{
 		if (signum == SIGUSR1)
 			c |= 1 << bit;
 		++bit;
-		kill(clientPID, SIGUSR1);
 		if (bit == 8)
 		{
-			if (c == 0)
-				clientPID = 0;
 			if (c)
 				write(1, &c, 1);
 			bit = 0;
+			if (c == 0)
+				g_client_pid = 0;
 			c = 0;
 		}
+		kill(info->si_pid, SIGUSR1);
 	}
+	else
+		kill(info->si_pid, SIGUSR2);
 }
 
 int	main(void)
