@@ -1,14 +1,12 @@
+NAME1=server
+NAME2=client
 SRCS=server.c client.c
 CC=cc
 LIBDIR=libft
 RM=/bin/rm -f
 CFLAGS=-Wall -Wextra -Werror
 
-all: server client
-
-%: %.c
-	@make -C $(LIBDIR) all >/dev/null
-	$(CC) $(CFLAGS) -o $@ $< -L $(LIBDIR) -lft -I $(LIBDIR)
+all: $(NAME1) $(NAME2)
 
 %: %.c
 	@make -C $(LIBDIR) all >/dev/null
@@ -19,8 +17,10 @@ clean:
 
 fclean: clean
 	@make -C $(LIBDIR) fclean >/dev/null
-	$(RM) server client
+	$(RM) $(NAME1) $(NAME2)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+bonus: all
+
+.PHONY: all clean fclean re bonus
