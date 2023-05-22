@@ -1,5 +1,6 @@
 NAME1=server
 NAME2=client
+HEADER=minitalk.h
 SRCS=server.c client.c
 CC=cc
 LIBDIR=libft
@@ -8,7 +9,7 @@ CFLAGS=-Wall -Wextra -Werror
 
 all: $(NAME1) $(NAME2)
 
-%: %.c
+%: %.c $(HEADER)
 	@make -C $(LIBDIR) all >/dev/null
 	$(CC) $(CFLAGS) -o $@ $< -L $(LIBDIR) -lft -I $(LIBDIR)
 

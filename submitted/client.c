@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 15:02:23 by dlu               #+#    #+#             */
-/*   Updated: 2023/05/22 09:58:23 by dlu              ###   ########.fr       */
+/*   Updated: 2023/05/22 10:21:53 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static volatile int	g_received = FALSE;
 
 static void	signal_handler(int signal)
 {
-	usleep(DELAY_MILLISEC);
+	usleep(DELAY_MICROSEC);
 	if (signal == SIGUSR2)
 	{
 		write(1, SERVER_BUSY_MSG, 38);
@@ -40,7 +40,7 @@ static void	send_char(int pid, char c)
 			kill(pid, SIGUSR2);
 		++bit;
 		while (!g_received)
-			usleep(DELAY_MILLISEC);
+			usleep(DELAY_MICROSEC);
 	}
 	g_received = FALSE;
 }
@@ -63,7 +63,7 @@ static int	establish_connection(int pid)
 	i = -1;
 	kill(pid, SIGUSR1);
 	while (++i < TIMEOUT_LIMIT && !g_received)
-		usleep(DELAY_MILLISEC);
+		usleep(DELAY_MICROSEC);
 	if (g_received)
 		return (TRUE);
 	return (FALSE);
