@@ -6,31 +6,42 @@
 #    By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/20 01:06:58 by dlu               #+#    #+#              #
-#    Updated: 2025/06/20 01:09:14 by dlu              ###   ########.fr        #
+#    Updated: 2025/06/21 01:22:04 by dlu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME1	:=	server
 NAME2	:=	client
 
-HEADER	:=	minitalk.h
-SRCS	:=	server.c client.c
-LIBDIR	:=	libft
+SRCDIR	:=	src
 
-CC		:=	cc
-CFLAGS	:=	-Wall -Wextra -Werror
-RM		:=	/bin/rm -f
+INCDIR	:=	include
+_HEADER	:=	minitalk.h
+HEADER	:=	$(addprefix $(INCDIR)/, $(_HEADER))
+
+LIBDIR	:=	libft
+_LIBFT	:=	libft.a
+LIBFT	:=	$(addprefix $(LIBDIR)/, $(_LIBFT))
+
+CC			:=	cc
+RM			:=	/bin/rm -f
+CFLAGS		:=	-Wall -Wextra -Werror
+CPPFLAGS	:=	-I $(INCDIR) -I $(LIBDIR)/$(INCDIR)
+LDFLAGS		:=	-L $(LIBDIR)
+LDLIBS		:=	-lft
+
+.DEFAULT_GOAL	:=	all
 
 .PHONY: all
 all: $(NAME1) $(NAME2)
 
 .PHONY: clean
 clean:
-	@make -C $(LIBDIR) clean >/dev/null
+	$(MAKE) -C $(LIBDIR) $@ --silent
 
 .PHONY: fclean
 fclean: clean
-	@make -C $(LIBDIR) fclean >/dev/null
+	$(MAKE) -C $(LIBDIR) $@ --silent
 	$(RM) $(NAME1) $(NAME2)
 
 .PHONY: re
@@ -39,6 +50,9 @@ re: fclean all
 .PHONY: bonus
 bonus: all
 
-%: %.c $(HEADER)
-	@make -C $(LIBDIR) all >/dev/null
-	$(CC) $(CFLAGS) -o $@ $< -L $(LIBDIR) -lft -I $(LIBDIR)
+%: $(SRCDIR)/%.c $(LIBFT) $(HEADER)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LDFLAGS) $(LDLIBS)
+
+$(LIBFT):
+	git submodule update --init --recursive
+	$(MAKE) -C $(LIBDIR)
