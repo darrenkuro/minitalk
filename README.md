@@ -6,6 +6,8 @@
   <img src="https://img.shields.io/badge/date-May%2022nd,%202023-ff6984?style=flat-square&logo=Cachet&logoColor=white" alt="Date"/>
 </p>
 
+> This repo contains a UNIX signal-based client-server communication program. It is a reimplementation of low-level inter-process communication using only SIGUSR1 and SIGUSR2 signals.
+
 ---
 
 ## 📄 License
