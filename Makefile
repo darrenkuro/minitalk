@@ -6,12 +6,14 @@
 #    By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/20 01:06:58 by dlu               #+#    #+#              #
-#    Updated: 2025/06/21 01:22:04 by dlu              ###   ########.fr        #
+#    Updated: 2025/06/21 19:58:26 by dlu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME1	:=	server
-NAME2	:=	client
+NAME	:=	minitalk
+PROJECT	:=	$$YELLOW[$(NAME)]$$RESET
+TARGET1	:=	server
+TARGET2	:=	client
 
 SRCDIR	:=	src
 
@@ -33,16 +35,18 @@ LDLIBS		:=	-lft
 .DEFAULT_GOAL	:=	all
 
 .PHONY: all
-all: $(NAME1) $(NAME2)
+all: $(TARGET1) $(TARGET2)
 
 .PHONY: clean
 clean:
-	$(MAKE) -C $(LIBDIR) $@ --silent
+	@$(MAKE) -C $(LIBDIR) $@
 
 .PHONY: fclean
 fclean: clean
-	$(MAKE) -C $(LIBDIR) $@ --silent
-	$(RM) $(NAME1) $(NAME2)
+	@$(MAKE) -C $(LIBDIR) $@
+	@printf "$(PROJECT) 🗑️ Removing binary files..."
+	@$(RM) $(TARGET1) $(TARGET2)
+	@echo " ✅ "
 
 .PHONY: re
 re: fclean all
@@ -51,8 +55,13 @@ re: fclean all
 bonus: all
 
 %: $(SRCDIR)/%.c $(LIBFT) $(HEADER)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LDFLAGS) $(LDLIBS)
+	@printf "$(PROJECT) ⚙️ Compiling: $<..."
+	@$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LDFLAGS) $(LDLIBS)
+	@echo " ✅ "
 
 $(LIBFT):
-	git submodule update --init --recursive
-	$(MAKE) -C $(LIBDIR)
+	@printf "$(PROJECT) 🔄 Initializing and updating git submodules..."
+	@git submodule update --init --recursive
+	@echo " ✅ "
+	@echo "$(PROJECT) ⚙️ Building libft..."
+	@$(MAKE) -C $(LIBDIR) --silent
