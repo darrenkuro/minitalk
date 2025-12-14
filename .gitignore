@@ -27,16 +27,20 @@ build/
 __pycache__/
 *.py[cod]
 *.egg-info/
+.venv/
 
 # Rust
 target/
 
+# Nix
+result/
+
 # C/C++
 *.o
 *.d
-*.out
 *.a
 *.so
+*.out
 
 # Obsidian vault cache
 .obsidian/workspace
